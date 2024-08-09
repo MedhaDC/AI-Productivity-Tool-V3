@@ -41,11 +41,28 @@
             display: flex;
             flex-direction: column;
         }
+        .form-row {
+            display: flex;
+            justify-content: space-between;
+        }
+        .form-row > div {
+            flex: 1;
+            display: flex;
+            align-items: center;
+            margin-right: 10px;
+        }
+        .form-row > div:last-child {
+            margin-right: 0;
+        }
         input, select, button, textarea {
             margin-bottom: 0.5rem;
             padding: 0.5rem;
             border: 1px solid #bdc3c7;
             border-radius: 4px;
+            width: 100%;
+        }
+        textarea {
+            height: 100px;
         }
         button {
             background-color: #fb8706;
@@ -99,7 +116,12 @@
             flex-wrap: wrap;
             justify-content: center;
         }
+        canvas {
+            max-width: 100%;
+            height: auto;
+        }
     </style>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 </head>
 <body>
     <header>
@@ -111,23 +133,33 @@
         <section id="taskLogging">
             <h2>Log New Task</h2>
             <form id="taskForm">
-                <div class="input-group">
-                    <input type="text" id="taskName" placeholder="Task Name" required aria-label="Task Name">
-                    <button id="voiceTaskName" class="voice-input-button" aria-label="Start Voice Input for Task Name">🎤</button>
+                <div class="form-row">
+                    <div class="input-group">
+                        <input type="text" id="taskName" placeholder="Task Name" required aria-label="Task Name">
+                        <button id="voiceTaskName" class="voice-input-button" aria-label="Start Voice Input for Task Name">🎤</button>
+                    </div>
+                    <div class="input-group">
+                        <select id="taskCategory" required aria-label="Task Category">
+                            <option value="">Select Category</option>
+                            <option value="ideaGeneration">Idea Generation</option>
+                            <option value="writing">Writing</option>
+                            <option value="presentation">Presentation</option>
+                            <option value="coding">Coding</option>
+                            <option value="debugging">Debugging</option>
+                            <option value="problemSolving">Problem Solving</option>
+                            <option value="documentation">Documentation</option>
+                        </select>
+                    </div>
                 </div>
-                <select id="taskCategory" required aria-label="Task Category">
-                    <option value="">Select Category</option>
-                    <option value="coding">Coding</option>
-                    <option value="writing">Writing</option>
-                    <option value="problemSolving">Problem Solving</option>
-                </select>
-                <div class="input-group">
-                    <input type="number" id="estimatedTime" placeholder="Estimated Manual Time (minutes)" required min="1" aria-label="Estimated Manual Time">
-                    <button id="voiceEstimatedTime" class="voice-input-button" aria-label="Start Voice Input for Estimated Time">🎤</button>
-                </div>
-                <div class="input-group">
-                    <input type="number" id="actualTime" placeholder="Actual AI-Assisted Time (minutes)" required min="1" aria-label="Actual AI-Assisted Time">
-                    <button id="voiceActualTime" class="voice-input-button" aria-label="Start Voice Input for Actual Time">🎤</button>
+                <div class="form-row">
+                    <div class="input-group">
+                        <input type="number" id="estimatedTime" placeholder="Estimated Manual Time (minutes)" required min="1" aria-label="Estimated Manual Time">
+                        <button id="voiceEstimatedTime" class="voice-input-button" aria-label="Start Voice Input for Estimated Time">🎤</button>
+                    </div>
+                    <div class="input-group">
+                        <input type="number" id="actualTime" placeholder="Actual AI-Assisted Time (minutes)" required min="1" aria-label="Actual AI-Assisted Time">
+                        <button id="voiceActualTime" class="voice-input-button" aria-label="Start Voice Input for Actual Time">🎤</button>
+                    </div>
                 </div>
                 <div class="input-group">
                     <textarea id="taskDetails" placeholder="Explain task in detail" required aria-label="Task Details"></textarea>
@@ -165,6 +197,7 @@
                     </tbody>
                 </table>
             </div>
+            <canvas id="productivityChart"></canvas>
             <button id="clearData" style="margin-top: 1rem;">Clear All Data</button>
         </section>
     </main>
@@ -213,6 +246,7 @@
                 document.getElementById('efficiency').textContent = efficiency;
 
                 updateTaskHistory(tasks);
+                updateChart(tasks);
                 checkAndAwardBadges(totalTasks, timeSaved, efficiency);
             } catch (error) {
                 console.error('Error updating dashboard:', error);
@@ -296,6 +330,34 @@
 
         // Initial dashboard update
         updateDashboard();
+
+        // Function to update chart
+        function updateChart(tasks) {
+            const ctx = document.getElementById('productivityChart').getContext('2d');
+            const categories = ['Idea Generation', 'Writing', 'Presentation', 'Coding', 'Debugging', 'Problem Solving', 'Documentation'];
+            const categoryCounts = categories.map(category => tasks.filter(task => task.category === category).length);
+
+            new Chart(ctx, {
+                type: 'bar',
+                data: {
+                    labels: categories,
+                    datasets: [{
+                        label: 'Tasks by Category',
+                        data: categoryCounts,
+                        backgroundColor: '#fb8706',
+                        borderColor: '#fb8706',
+                        borderWidth: 1
+                    }]
+                },
+                options: {
+                    scales: {
+                        y: {
+                            beginAtZero: true
+                        }
+                    }
+                }
+            });
+        }
     </script>
 </body>
 </html>
