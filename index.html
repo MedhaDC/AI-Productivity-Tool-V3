@@ -75,13 +75,18 @@
             background-color: #e67e22;
         }
         .voice-input-button {
-            background-color: #fb8706;
+            background-color: #222222;
             color: white;
             border: none;
-            padding: 10px;
+            width: 40px;
+            height: 40px;
+            padding: 0;
             border-radius: 50%;
             cursor: pointer;
             margin-left: 5px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
         }
         .input-group {
             display: flex;
@@ -338,21 +343,29 @@
             const categoryCounts = categories.map(category => tasks.filter(task => task.category === category).length);
 
             new Chart(ctx, {
-                type: 'bar',
+                type: 'pie',
                 data: {
                     labels: categories,
                     datasets: [{
                         label: 'Tasks by Category',
                         data: categoryCounts,
-                        backgroundColor: '#fb8706',
-                        borderColor: '#fb8706',
-                        borderWidth: 1
+                        backgroundColor: ['#fb8706', '#34495e', '#f1c40f', '#e74c3c', '#9b59b6', '#2980b9', '#27ae60']
                     }]
                 },
                 options: {
-                    scales: {
-                        y: {
-                            beginAtZero: true
+                    responsive: true,
+                    plugins: {
+                        legend: {
+                            position: 'top',
+                        },
+                        tooltip: {
+                            callbacks: {
+                                label: function(context) {
+                                    const label = context.label || '';
+                                    const value = context.raw || 0;
+                                    return `${label}: ${value} task${value !== 1 ? 's' : ''}`;
+                                }
+                            }
                         }
                     }
                 }
