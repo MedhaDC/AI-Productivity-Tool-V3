@@ -287,7 +287,7 @@
             }
         });
 
-        // Voice-to-Text for Task Name
+        // Voice-to-Text for Task Name and Time Inputs
         const voiceRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
         if (voiceRecognition) {
             const recognizer = new voiceRecognition();
@@ -302,14 +302,14 @@
             document.getElementById('voiceEstimatedTime').addEventListener('click', () => {
                 recognizer.start();
                 recognizer.onresult = (event) => {
-                    document.getElementById('estimatedTime').value = event.results[0][0].transcript;
+                    document.getElementById('estimatedTime').value = event.results[0][0].transcript.replace(/\D/g, '');
                 };
             });
 
             document.getElementById('voiceActualTime').addEventListener('click', () => {
                 recognizer.start();
                 recognizer.onresult = (event) => {
-                    document.getElementById('actualTime').value = event.results[0][0].transcript;
+                    document.getElementById('actualTime').value = event.results[0][0].transcript.replace(/\D/g, '');
                 };
             });
 
@@ -330,15 +330,35 @@
         // AI Assistance for Task Details
         document.getElementById('aiAssist').addEventListener('click', function() {
             const taskDetails = document.getElementById('taskDetails').value;
-            const formalizedText = formalizeText(taskDetails);
-            document.getElementById('taskDetails').value = formalizedText;
+            const enhancedText = formalizeAndEnhanceText(taskDetails);
+            document.getElementById('taskDetails').value = enhancedText;
         });
 
-        function formalizeText(text) {
+        function formalizeAndEnhanceText(text) {
             // This is a simple implementation. In a real-world scenario, you'd use a more sophisticated NLP model.
             const sentences = text.split('.').filter(s => s.trim() !== '');
-            const bulletPoints = sentences.map(s => '• ' + s.trim().charAt(0).toUpperCase() + s.trim().slice(1));
+            const bulletPoints = sentences.map(s => '• ' + enhanceLanguage(s.trim().charAt(0).toUpperCase() + s.trim().slice(1)));
             return bulletPoints.join('\n');
+        }
+
+        function enhanceLanguage(sentence) {
+            // Simple language enhancement for demonstration purposes
+            return sentence.replace(/\bi\b/g, 'I')
+                           .replace(/\bcan't\b/g, 'cannot')
+                           .replace(/\bdon't\b/g, 'do not')
+                           .replace(/\bwon't\b/g, 'will not')
+                           .replace(/\bshouldn't\b/g, 'should not')
+                           .replace(/\bcouldn't\b/g, 'could not')
+                           .replace(/\bwouldn't\b/g, 'would not')
+                           .replace(/\bisn't\b/g, 'is not')
+                           .replace(/\baren't\b/g, 'are not')
+                           .replace(/\bwasn't\b/g, 'was not')
+                           .replace(/\bweren't\b/g, 'were not')
+                           .replace(/\bhasn't\b/g, 'has not')
+                           .replace(/\bhaven't\b/g, 'have not')
+                           .replace(/\bhadn't\b/g, 'had not')
+                           .replace(/\bcan't\b/g, 'cannot')
+                           .replace(/\bdidn't\b/g, 'did not');
         }
 
         // Initial dashboard update
