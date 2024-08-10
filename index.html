@@ -126,7 +126,7 @@
 <body>
     <header>
         <h1>AI Productivity Booster</h1>
-        <p id="userName">Welcome, John Doe</p>
+        <p id="userName">Welcome, Medha Chikhalikar</p>
     </header>
     
     <main>
@@ -327,20 +327,74 @@
             alert('Voice recognition not supported in this browser.');
         }
 
-        // AI Assistance for Task Details
+                // AI Assistance for Task Details
         document.getElementById('aiAssist').addEventListener('click', function() {
             const taskDetails = document.getElementById('taskDetails').value;
-            const formalizedText = formalizeText(taskDetails);
-            document.getElementById('taskDetails').value = formalizedText;
+            const enhancedText = formalizeAndEnhanceText(taskDetails);
+            document.getElementById('taskDetails').value = enhancedText;
         });
 
-        function formalizeText(text) {
-            // This is a simple implementation. In a real-world scenario, you'd use a more sophisticated NLP model.
-            const sentences = text.split('.').filter(s => s.trim() !== '');
-            const bulletPoints = sentences.map(s => '• ' + s.trim().charAt(0).toUpperCase() + s.trim().slice(1));
-            return bulletPoints.join('\n');
+        function formalizeAndEnhanceText(text) {
+            // Split text into sentences
+            const sentences = text.match(/[^.!?]+[.!?]+/g) || [text];
+            
+            // Process each sentence
+            const enhancedSentences = sentences.map(sentence => {
+                return enhanceLanguage(sentence.trim());
+            });
+
+            // Convert to bullet points
+            return enhancedSentences.map(sentence => `• ${sentence}`).join('\n');
         }
 
+        function enhanceLanguage(sentence) {
+            // Capitalize first letter
+            sentence = sentence.charAt(0).toUpperCase() + sentence.slice(1);
+
+            // Replace contractions and informal words
+            const replacements = {
+                'i': 'I',
+                "can't": 'cannot',
+                "don't": 'do not',
+                "won't": 'will not',
+                "shouldn't": 'should not',
+                "couldn't": 'could not',
+                "wouldn't": 'would not',
+                "isn't": 'is not',
+                "aren't": 'are not',
+                "wasn't": 'was not',
+                "weren't": 'were not',
+                "hasn't": 'has not',
+                "haven't": 'have not',
+                "hadn't": 'had not',
+                "didn't": 'did not',
+                'gonna': 'going to',
+                'wanna': 'want to',
+                'gotta': 'got to',
+                'kinda': 'kind of',
+                'sorta': 'sort of',
+                'dunno': 'do not know',
+                'yeah': 'yes',
+                'yep': 'yes',
+                'nope': 'no',
+                'cuz': 'because',
+                'cause': 'because',
+                'cos': 'because',
+                'ok': 'okay'
+            };
+
+            for (const [informal, formal] of Object.entries(replacements)) {
+                const regex = new RegExp(`\\b${informal}\\b`, 'gi');
+                sentence = sentence.replace(regex, formal);
+            }
+
+            // Ensure the sentence ends with proper punctuation
+            if (!/[.!?]$/.test(sentence)) {
+                sentence += '.';
+            }
+
+            return sentence;
+        }
         // Initial dashboard update
         updateDashboard();
     </script>
