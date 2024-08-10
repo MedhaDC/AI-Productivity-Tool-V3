@@ -336,7 +336,7 @@
 
         function formalizeAndEnhanceText(text) {
             // This is a simple implementation. In a real-world scenario, you'd use a more sophisticated NLP model.
-            const sentences = text.split('.').filter(s => s.trim() !== '');
+            const sentences = text.split(/[.!?]/).filter(s => s.trim() !== '');
             const bulletPoints = sentences.map(s => '• ' + enhanceLanguage(s.trim().charAt(0).toUpperCase() + s.trim().slice(1)));
             return bulletPoints.join('\n');
         }
