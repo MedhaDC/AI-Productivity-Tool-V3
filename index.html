@@ -5,14 +5,287 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>AI Productivity Booster</title>
     <style>
-        /* ... (previous CSS remains unchanged) ... */
+        body {
+            font-family: Arial, sans-serif;
+            line-height: 1.6;
+            margin: 0;
+            padding: 0;
+            color: #222222;
+            background-color: #f9f9f9;
+        }
+        header, footer {
+            background-color: #222222;
+            color: #fb8706;
+            text-align: center;
+            padding: 1rem;
+        }
+        main {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 1rem;
+        }
+        section {
+            background-color: #fff;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+            margin-bottom: 1rem;
+            padding: 1rem;
+            width: 100%;
+            max-width: 600px;
+        }
+        h2 {
+            margin-top: 0;
+        }
+        form {
+            display: flex;
+            flex-direction: column;
+        }
+        .form-row {
+            display: flex;
+            justify-content: space-between;
+        }
+        .form-row > div {
+            flex: 1;
+            display: flex;
+            align-items: center;
+            margin-right: 10px;
+        }
+        .form-row > div:last-child {
+            margin-right: 0;
+        }
+        input, select, button, textarea {
+            margin-bottom: 0.5rem;
+            padding: 0.5rem;
+            border: 1px solid #bdc3c7;
+            border-radius: 4px;
+            width: 100%;
+        }
+        textarea {
+            height: 100px;
+        }
+        button {
+            background-color: #fb8706;
+            color: white;
+            border: none;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+        button:hover {
+            background-color: #e67e22;
+        }
+        .voice-input-button {
+            background-color: #cccccc;
+            color: white;
+            border: none;
+            width: 40px;
+            height: 40px;
+            padding: 0;
+            border-radius: 50%;
+            cursor: pointer;
+            margin-left: 5px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+        .input-group {
+            display: flex;
+            align-items: center;
+        }
+        .badge {
+            display: flex;
+            align-items: center;
+            background-color: #f1c40f;
+            color: #34495e;
+            padding: 0.5rem;
+            margin: 0.5rem;
+            border-radius: 4px;
+            width: calc(33% - 1rem);
+            box-sizing: border-box;
+        }
+        .badge img {
+            width: 40px;
+            height: 40px;
+            margin-right: 10px;
+        }
+        .badge h4 {
+            margin: 0;
+            font-size: 1rem;
+        }
+        .badge p {
+            margin: 0;
+            font-size: 0.875rem;
+        }
+        .badges-container {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+        }
     </style>
 </head>
 <body>
-    <!-- ... (previous HTML structure remains unchanged) ... -->
+    <header>
+        <h1>AI Productivity Booster</h1>
+        <p id="userName">Welcome, John Doe</p>
+    </header>
+    
+    <main>
+        <section id="taskLogging">
+            <h2>Log New Task</h2>
+            <form id="taskForm">
+                <div class="form-row">
+                    <div class="input-group">
+                        <input type="text" id="taskName" placeholder="Task Name" required aria-label="Task Name">
+                        <button type="button" id="voiceTaskName" class="voice-input-button" aria-label="Start Voice Input for Task Name">🎤</button>
+                    </div>
+                    <div class="input-group">
+                        <select id="taskCategory" required aria-label="Task Category">
+                            <option value="">Select Category</option>
+                            <option value="ideaGeneration">Idea Generation</option>
+                            <option value="writing">Writing</option>
+                            <option value="presentation">Presentation</option>
+                            <option value="coding">Coding</option>
+                            <option value="debugging">Debugging</option>
+                            <option value="problemSolving">Problem Solving</option>
+                            <option value="documentation">Documentation</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="form-row">
+                    <div class="input-group">
+                        <input type="number" id="estimatedTime" placeholder="Estimated Manual Time (minutes)" required min="1" aria-label="Estimated Manual Time">
+                        <button type="button" id="voiceEstimatedTime" class="voice-input-button" aria-label="Start Voice Input for Estimated Time">🎤</button>
+                    </div>
+                    <div class="input-group">
+                        <input type="number" id="actualTime" placeholder="Actual AI-Assisted Time (minutes)" required min="1" aria-label="Actual AI-Assisted Time">
+                        <button type="button" id="voiceActualTime" class="voice-input-button" aria-label="Start Voice Input for Actual Time">🎤</button>
+                    </div>
+                </div>
+                <div class="input-group">
+                    <textarea id="taskDetails" placeholder="Explain task in detail" required aria-label="Task Details"></textarea>
+                    <button type="button" id="voiceTaskDetails" class="voice-input-button" aria-label="Start Voice Input for Task Details">🎤</button>
+                </div>
+                <button type="button" id="aiAssist">AI Assist</button>
+                <button type="submit">Log Task</button>
+            </form>
+        </section>
+        
+        <section id="dashboard">
+            <h2>Your Productivity Dashboard</h2>
+            <div id="metrics">
+                <p>Total Tasks: <span id="totalTasks">0</span></p>
+                <p>Time Saved: <span id="timeSaved">0</span> minutes</p>
+                <p>Efficiency Improvement: <span id="efficiency">0</span>%</p>
+            </div>
+            <div id="badges">
+                <h3>Your Badges</h3>
+                <div class="badges-container" id="badgesContainer">
+                    <!-- Badges will be inserted here -->
+                </div>
+            </div>
+            <div id="taskHistory">
+                <h3>Recent Tasks</h3>
+                <table id="taskTable">
+                    <thead>
+                        <tr>
+                            <th>Task</th>
+                            <th>Category</th>
+                            <th>Time Saved</th>
+                            <th>Date</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                    </tbody>
+                </table>
+            </div>
+            <button id="clearData" style="margin-top: 1rem;">Clear All Data</button>
+        </section>
+    </main>
+    
+    <footer>
+        <p>&copy; 2023 AI Productivity Booster | Version 1.1</p>
+    </footer>
     
     <script>
-        // ... (previous JavaScript code remains unchanged until the voice recognition part) ...
+        document.getElementById('taskForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            const task = {
+                name: document.getElementById('taskName').value,
+                category: document.getElementById('taskCategory').value,
+                estimatedTime: Math.max(1, parseInt(document.getElementById('estimatedTime').value)),
+                actualTime: Math.max(1, parseInt(document.getElementById('actualTime').value)),
+                details: document.getElementById('taskDetails').value,
+                timeSaved: Math.max(0, parseInt(document.getElementById('estimatedTime').value) - parseInt(document.getElementById('actualTime').value)),
+                date: new Date().toISOString()
+            };
+            saveTasks(task);
+            updateDashboard();
+            this.reset();
+        });
+
+        function saveTasks(task) {
+            try {
+                let tasks = JSON.parse(localStorage.getItem('tasks')) || [];
+                tasks.push(task);
+                localStorage.setItem('tasks', JSON.stringify(tasks));
+            } catch (error) {
+                console.error('Error saving task:', error);
+            }
+        }
+
+        function updateDashboard() {
+            try {
+                const tasks = JSON.parse(localStorage.getItem('tasks')) || [];
+                const totalTasks = tasks.length;
+                const timeSaved = tasks.reduce((total, task) => total + task.timeSaved, 0);
+                const totalEstimatedTime = tasks.reduce((total, task) => total + task.estimatedTime, 0);
+                const efficiency = totalEstimatedTime > 0 ? Math.round((timeSaved / totalEstimatedTime) * 100) : 0;
+
+                document.getElementById('totalTasks').textContent = totalTasks;
+                document.getElementById('timeSaved').textContent = timeSaved;
+                document.getElementById('efficiency').textContent = efficiency;
+
+                updateTaskHistory(tasks);
+                checkAndAwardBadges(totalTasks, timeSaved, efficiency);
+            } catch (error) {
+                console.error('Error updating dashboard:', error);
+            }
+        }
+
+        function updateTaskHistory(tasks) {
+            const tbody = document.querySelector('#taskTable tbody');
+            tbody.innerHTML = '';
+            tasks.slice(-5).reverse().forEach(task => {
+                const row = tbody.insertRow();
+                row.insertCell(0).textContent = task.name;
+                row.insertCell(1).textContent = task.category;
+                row.insertCell(2).textContent = task.timeSaved + ' minutes';
+                row.insertCell(3).textContent = new Date(task.date).toLocaleDateString();
+            });
+        }
+
+        function checkAndAwardBadges(totalTasks, timeSaved, efficiency) {
+            const badgesContainer = document.getElementById('badgesContainer');
+            badgesContainer.innerHTML = '';
+
+            if (totalTasks >= 1) addBadge('AI Novice', 'Logged your first task!', 'https://via.placeholder.com/40');
+            if (timeSaved >= 60) addBadge('Time Saver', 'Saved over 1 hour!', 'https://via.placeholder.com/40');
+            if (efficiency >= 50) addBadge('Efficiency Expert', 'Improved efficiency by 50%!', 'https://via.placeholder.com/40');
+        }
+
+        function addBadge(title, description, imgSrc) {
+            const badge = document.createElement('div');
+            badge.className = 'badge';
+            badge.innerHTML = `<img src="${imgSrc}" alt="${title} Badge"><div><h4>${title}</h4><p>${description}</p></div>`;
+            document.getElementById('badgesContainer').appendChild(badge);
+        }
+
+        document.getElementById('clearData').addEventListener('click', function() {
+            if (confirm('Are you sure you want to clear all data? This action cannot be undone.')) {
+                localStorage.removeItem('tasks');
+                updateDashboard();
+            }
+        });
 
         // Voice-to-Text for Task Name and Time Inputs
         const voiceRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
@@ -29,14 +302,14 @@
             document.getElementById('voiceEstimatedTime').addEventListener('click', () => {
                 recognizer.start();
                 recognizer.onresult = (event) => {
-                    document.getElementById('estimatedTime').value = wordsToNumbers(event.results[0][0].transcript);
+                    document.getElementById('estimatedTime').value = event.results[0][0].transcript.replace(/\D/g, '');
                 };
             });
 
             document.getElementById('voiceActualTime').addEventListener('click', () => {
                 recognizer.start();
                 recognizer.onresult = (event) => {
-                    document.getElementById('actualTime').value = wordsToNumbers(event.results[0][0].transcript);
+                    document.getElementById('actualTime').value = event.results[0][0].transcript.replace(/\D/g, '');
                 };
             });
 
@@ -54,35 +327,6 @@
             alert('Voice recognition not supported in this browser.');
         }
 
-        function wordsToNumbers(text) {
-            const wordToNumber = {
-                'zero': 0, 'one': 1, 'two': 2, 'three': 3, 'four': 4, 'five': 5, 'six': 6, 'seven': 7, 'eight': 8, 'nine': 9, 'ten': 10,
-                'eleven': 11, 'twelve': 12, 'thirteen': 13, 'fourteen': 14, 'fifteen': 15, 'sixteen': 16, 'seventeen': 17, 'eighteen': 18, 'nineteen': 19, 'twenty': 20,
-                'thirty': 30, 'forty': 40, 'fifty': 50, 'sixty': 60, 'seventy': 70, 'eighty': 80, 'ninety': 90,
-                'hundred': 100, 'thousand': 1000, 'million': 1000000
-            };
-
-            const words = text.toLowerCase().split(/\s+/);
-            let result = 0;
-            let currentNumber = 0;
-
-            for (const word of words) {
-                if (wordToNumber[word] !== undefined) {
-                    if (wordToNumber[word] === 100) {
-                        currentNumber *= 100;
-                    } else if (wordToNumber[word] === 1000 || wordToNumber[word] === 1000000) {
-                        currentNumber *= wordToNumber[word];
-                        result += currentNumber;
-                        currentNumber = 0;
-                    } else {
-                        currentNumber += wordToNumber[word];
-                    }
-                }
-            }
-
-            return result + currentNumber || text;
-        }
-
         // AI Assistance for Task Details
         document.getElementById('aiAssist').addEventListener('click', function() {
             const taskDetails = document.getElementById('taskDetails').value;
@@ -91,65 +335,30 @@
         });
 
         function formalizeAndEnhanceText(text) {
-            // Split text into sentences
-            const sentences = text.match(/[^.!?]+[.!?]+/g) || [text];
-            
-            // Process each sentence
-            const enhancedSentences = sentences.map(sentence => {
-                return enhanceLanguage(sentence.trim());
-            });
-
-            // Convert to bullet points
-            return enhancedSentences.map(sentence => `• ${sentence}`).join('\n');
+            // This is a simple implementation. In a real-world scenario, you'd use a more sophisticated NLP model.
+            const sentences = text.split(/[.!?]/).filter(s => s.trim() !== '');
+            const bulletPoints = sentences.map(s => '• ' + enhanceLanguage(s.trim().charAt(0).toUpperCase() + s.trim().slice(1)));
+            return bulletPoints.join('\n');
         }
 
         function enhanceLanguage(sentence) {
-            // Capitalize first letter
-            sentence = sentence.charAt(0).toUpperCase() + sentence.slice(1);
-
-            // Replace contractions and informal words
-            const replacements = {
-                'i': 'I',
-                "can't": 'cannot',
-                "don't": 'do not',
-                "won't": 'will not',
-                "shouldn't": 'should not',
-                "couldn't": 'could not',
-                "wouldn't": 'would not',
-                "isn't": 'is not',
-                "aren't": 'are not',
-                "wasn't": 'was not',
-                "weren't": 'were not',
-                "hasn't": 'has not',
-                "haven't": 'have not',
-                "hadn't": 'had not',
-                "didn't": 'did not',
-                'gonna': 'going to',
-                'wanna': 'want to',
-                'gotta': 'got to',
-                'kinda': 'kind of',
-                'sorta': 'sort of',
-                'dunno': 'do not know',
-                'yeah': 'yes',
-                'yep': 'yes',
-                'nope': 'no',
-                'cuz': 'because',
-                'cause': 'because',
-                'cos': 'because',
-                'ok': 'okay'
-            };
-
-            for (const [informal, formal] of Object.entries(replacements)) {
-                const regex = new RegExp(`\\b${informal}\\b`, 'gi');
-                sentence = sentence.replace(regex, formal);
-            }
-
-            // Ensure the sentence ends with proper punctuation
-            if (!/[.!?]$/.test(sentence)) {
-                sentence += '.';
-            }
-
-            return sentence;
+            // Simple language enhancement for demonstration purposes
+            return sentence.replace(/\bi\b/g, 'I')
+                           .replace(/\bcan't\b/g, 'cannot')
+                           .replace(/\bdon't\b/g, 'do not')
+                           .replace(/\bwon't\b/g, 'will not')
+                           .replace(/\bshouldn't\b/g, 'should not')
+                           .replace(/\bcouldn't\b/g, 'could not')
+                           .replace(/\bwouldn't\b/g, 'would not')
+                           .replace(/\bisn't\b/g, 'is not')
+                           .replace(/\baren't\b/g, 'are not')
+                           .replace(/\bwasn't\b/g, 'was not')
+                           .replace(/\bweren't\b/g, 'were not')
+                           .replace(/\bhasn't\b/g, 'has not')
+                           .replace(/\bhaven't\b/g, 'have not')
+                           .replace(/\bhadn't\b/g, 'had not')
+                           .replace(/\bcan't\b/g, 'cannot')
+                           .replace(/\bdidn't\b/g, 'did not');
         }
 
         // Initial dashboard update
