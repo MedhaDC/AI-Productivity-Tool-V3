@@ -75,7 +75,7 @@
             background-color: #e67e22;
         }
         .voice-input-button {
-            background-color: #222222;
+            background-color: #cccccc;
             color: white;
             border: none;
             width: 40px;
@@ -121,12 +121,7 @@
             flex-wrap: wrap;
             justify-content: center;
         }
-        canvas {
-            max-width: 100%;
-            height: auto;
-        }
     </style>
-    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 </head>
 <body>
     <header>
@@ -141,7 +136,7 @@
                 <div class="form-row">
                     <div class="input-group">
                         <input type="text" id="taskName" placeholder="Task Name" required aria-label="Task Name">
-                        <button id="voiceTaskName" class="voice-input-button" aria-label="Start Voice Input for Task Name">🎤</button>
+                        <button type="button" id="voiceTaskName" class="voice-input-button" aria-label="Start Voice Input for Task Name">🎤</button>
                     </div>
                     <div class="input-group">
                         <select id="taskCategory" required aria-label="Task Category">
@@ -159,17 +154,18 @@
                 <div class="form-row">
                     <div class="input-group">
                         <input type="number" id="estimatedTime" placeholder="Estimated Manual Time (minutes)" required min="1" aria-label="Estimated Manual Time">
-                        <button id="voiceEstimatedTime" class="voice-input-button" aria-label="Start Voice Input for Estimated Time">🎤</button>
+                        <button type="button" id="voiceEstimatedTime" class="voice-input-button" aria-label="Start Voice Input for Estimated Time">🎤</button>
                     </div>
                     <div class="input-group">
                         <input type="number" id="actualTime" placeholder="Actual AI-Assisted Time (minutes)" required min="1" aria-label="Actual AI-Assisted Time">
-                        <button id="voiceActualTime" class="voice-input-button" aria-label="Start Voice Input for Actual Time">🎤</button>
+                        <button type="button" id="voiceActualTime" class="voice-input-button" aria-label="Start Voice Input for Actual Time">🎤</button>
                     </div>
                 </div>
                 <div class="input-group">
                     <textarea id="taskDetails" placeholder="Explain task in detail" required aria-label="Task Details"></textarea>
-                    <button id="voiceTaskDetails" class="voice-input-button" aria-label="Start Voice Input for Task Details">🎤</button>
+                    <button type="button" id="voiceTaskDetails" class="voice-input-button" aria-label="Start Voice Input for Task Details">🎤</button>
                 </div>
+                <button type="button" id="aiAssist">AI Assist</button>
                 <button type="submit">Log Task</button>
             </form>
         </section>
@@ -202,7 +198,6 @@
                     </tbody>
                 </table>
             </div>
-            <canvas id="productivityChart"></canvas>
             <button id="clearData" style="margin-top: 1rem;">Clear All Data</button>
         </section>
     </main>
@@ -251,7 +246,6 @@
                 document.getElementById('efficiency').textContent = efficiency;
 
                 updateTaskHistory(tasks);
-                updateChart(tasks);
                 checkAndAwardBadges(totalTasks, timeSaved, efficiency);
             } catch (error) {
                 console.error('Error updating dashboard:', error);
@@ -333,44 +327,22 @@
             alert('Voice recognition not supported in this browser.');
         }
 
+        // AI Assistance for Task Details
+        document.getElementById('aiAssist').addEventListener('click', function() {
+            const taskDetails = document.getElementById('taskDetails').value;
+            const formalizedText = formalizeText(taskDetails);
+            document.getElementById('taskDetails').value = formalizedText;
+        });
+
+        function formalizeText(text) {
+            // This is a simple implementation. In a real-world scenario, you'd use a more sophisticated NLP model.
+            const sentences = text.split('.').filter(s => s.trim() !== '');
+            const bulletPoints = sentences.map(s => '• ' + s.trim().charAt(0).toUpperCase() + s.trim().slice(1));
+            return bulletPoints.join('\n');
+        }
+
         // Initial dashboard update
         updateDashboard();
-
-        // Function to update chart
-        function updateChart(tasks) {
-            const ctx = document.getElementById('productivityChart').getContext('2d');
-            const categories = ['Idea Generation', 'Writing', 'Presentation', 'Coding', 'Debugging', 'Problem Solving', 'Documentation'];
-            const categoryCounts = categories.map(category => tasks.filter(task => task.category === category).length);
-
-            new Chart(ctx, {
-                type: 'pie',
-                data: {
-                    labels: categories,
-                    datasets: [{
-                        label: 'Tasks by Category',
-                        data: categoryCounts,
-                        backgroundColor: ['#fb8706', '#34495e', '#f1c40f', '#e74c3c', '#9b59b6', '#2980b9', '#27ae60']
-                    }]
-                },
-                options: {
-                    responsive: true,
-                    plugins: {
-                        legend: {
-                            position: 'top',
-                        },
-                        tooltip: {
-                            callbacks: {
-                                label: function(context) {
-                                    const label = context.label || '';
-                                    const value = context.raw || 0;
-                                    return `${label}: ${value} task${value !== 1 ? 's' : ''}`;
-                                }
-                            }
-                        }
-                    }
-                }
-            });
-        }
     </script>
 </body>
 </html>
